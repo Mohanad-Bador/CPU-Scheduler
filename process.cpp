@@ -26,6 +26,7 @@ process::process(int pid, int arrival_time, int burst_time, int priority) {
     this->arrival_time = arrival_time;
     this->burst_time = burst_time;
     this->priority = priority;
+    this->remaining_time = burst_time;
 }
 
 // Getter methods
@@ -39,6 +40,10 @@ int process::getArrivalTime() const {
 
 int process::getBurstTime() const {
     return burst_time;
+}
+
+int process::getRemainingTime() const {
+    return remaining_time;
 }
 
 int process::getStartTime() const {
@@ -55,6 +60,10 @@ int process::getPriority() const {
 
 void process::setBurstTime(int new_burst_time){
     this->burst_time = new_burst_time;
+}
+
+void process::setRemainingTime(int new_remaining_time){
+    this->remaining_time = new_remaining_time;
 }
 
 void process::setStartTime(int new_start_time){
