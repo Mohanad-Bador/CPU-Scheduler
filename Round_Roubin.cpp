@@ -60,33 +60,34 @@ vector<int> RR(int timequantum, vector<Process> &Waiting_queue) {
             continue;
         }
 
-        if (start == true) {
-            Circular_Shift_Left(Ready_queue);
-        }
+//        if (start == true) {
+//            Circular_Shift_Left(Ready_queue);
+//        }
 
  //Errorrrrrrrrrr infinite loop
 
         if (Ready_queue[0].burst_time > 0) {
-            if (Ready_queue[0].burst_time > q) {
-                int number_of_iteration=Ready_queue[0].burst_time/q;
-                for (int g = time; g < ceil(number_of_iteration); g++) {
+            if(Ready_queue[0].burst_time > q) {
+//                int number_of_iteration=Ready_queue[0].burst_time/q;
+//                for (int g = time; g < ceil(number_of_iteration)-1; g++) {
+
                     chart.push_back(Ready_queue[0].pid);
                     Ready_queue[0].burst_time -= q;
                     time+=q;
-                    Waiting_queue.push_back(Ready_queue[0]);
-                    break;
-                }
-                start = true;
-            } else {
-                for (int g = time; g < time + Ready_queue[0].burst_time; g++) {
+                Circular_Shift_Left(Ready_queue);
+
+//                }
+            }
+            else {
+//                for (int g = time; g < time + Ready_queue[0].burst_time; g++) {
                     chart.push_back(Ready_queue[0].pid);
                     time += Ready_queue[0].burst_time;
                     Ready_queue[0].burst_time = 0;
                     Ready_queue[0].finish_time = time;
                     finished_processes++;
                     ready_processes--;
-                    start = true;
-                }
+                Circular_Shift_Left(Ready_queue);
+//                }
             }
         }
 
@@ -96,76 +97,40 @@ vector<int> RR(int timequantum, vector<Process> &Waiting_queue) {
 
     }
 
-//    while (finished_processes < n) {
-//        bool found = false;
-//        for (int i = 0; i < n; i++) {
-//            if (time >= Waiting_queue[i].arrival_time) {
-//                Ready_queue.push_back(Waiting_queue[i]);
-//                Waiting_queue.erase(Waiting_queue.begin() + i); // Remove process from waiting queue
-//                found = true;
-//                break; // Exit the loop after finding a process to add to the ready queue
-//            }
-//        }
-//
-//        if (!found) {
-//            time++;
-//            continue;
-//        }
-//
-//        if (Ready_queue[0].burst_time > 0) {
-//            if (Ready_queue[0].burst_time > q) {
-//                for (int g = 0; g < q; g++) {
-//                    chart.push_back(Ready_queue[0].pid);
-//                    Ready_queue[0].burst_time--;
-//                    time++; // Increment time for each unit of burst time processed
-//                }
-//            } else {
-//                int remaining_burst_time = Ready_queue[0].burst_time;
-//                for (int g = 0; g < remaining_burst_time; g++) {
-//                    chart.push_back(Ready_queue[0].pid);
-//                    Ready_queue[0].burst_time = 0;
-//                    Ready_queue[0].finish_time = time + 1;
-//                    time++; // Increment time for each unit of burst time processed
-//                    finished_processes++;
-//                    ready_processes--;
-//                    start = true;
-//                }
-//            }
-//        }
-//
-//        Ready_queue.erase(Ready_queue.begin()); // Remove the processed process from the ready queue
-//    }
 
-
+    
     return chart;
 }
 
 
 int main() {
     int num_processes;
-    cout << "Enter the number of processes: ";
-    cin >> num_processes;
+//    cout << "Enter the number of processes: ";
+//    cin >> num_processes;
 
-    vector<Process> processes;  // Initialize an empty vector of processes
+    vector<Process> processes={{1,0,5},{2,1,4}};  // Initialize an empty vector of processes
 
-    for (int i = 0; i < num_processes; i++) {
-        int pid, arrival_time, burst_time;
-        cout << "Enter Process ID for Process " << i + 1 << ": ";
-        cin >> pid;
+//    for (int i = 0; i < num_processes; i++) {
+//        int pid, arrival_time, burst_time;
+//        cout << "Enter Process ID for Process " << i + 1 << ": ";
+//        cin >> pid;
+//
+//        cout << "Enter Arrival Time for Process " << i + 1 << ": ";
+//        cin >> arrival_time;
+//
+//        cout << "Enter Burst Time for Process " << i + 1 << ": ";
+//        cin >> burst_time;
+//
+//        processes.emplace_back(pid, arrival_time, burst_time);  // Add a new process to the vector
+//
+//        // Debug output to verify process details
+//        cout << "Process " << i + 1 << " details: PID=" << processes[i].pid
+//             << ", Arrival Time=" << processes[i].arrival_time
+//             << ", Burst Time=" << processes[i].burst_time << endl;
+//    }
 
-        cout << "Enter Arrival Time for Process " << i + 1 << ": ";
-        cin >> arrival_time;
 
-        cout << "Enter Burst Time for Process " << i + 1 << ": ";
-        cin >> burst_time;
 
-        processes.emplace_back(pid, arrival_time, burst_time);  // Add a new process to the vector
-
-        // Debug output to verify process details
-        cout << "Process " << i + 1 << " details: PID=" << processes[i].pid
-             << ", Arrival Time=" << processes[i].arrival_time
-             << ", Burst Time=" << processes[i].burst_time << endl;
-    }
 
     int timeQuantum = 2;
 
