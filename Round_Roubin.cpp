@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
 using namespace std;
 
 class Process {
@@ -23,7 +24,7 @@ public:
 };
 
 
-vector<int> chart = {0}; // Gantt chart should be a vector of integers
+vector<int> chart ; // Gantt chart should be a vector of integers
 
 void Circular_Shift_Left(vector<Process>&list) {
     int temp = list[0].pid;
@@ -48,7 +49,7 @@ vector<int> RR(int timequantum, vector<Process> &Waiting_queue) {
     while (finished_processes < n) {
         for (int i = arrived_processes; i < n; i++) {
             if (time >= Waiting_queue[i].arrival_time) {
-                Ready_queue[i]=Waiting_queue[i];  //@@@@@@@@@@@@@@@@
+                Ready_queue.push_back(Waiting_queue[i]);
                 arrived_processes++;
                 ready_processes++;
             }
@@ -63,13 +64,19 @@ vector<int> RR(int timequantum, vector<Process> &Waiting_queue) {
             Circular_Shift_Left(Ready_queue);
         }
 
+ //Errorrrrrrrrrr infinite loop
+
         if (Ready_queue[0].burst_time > 0) {
             if (Ready_queue[0].burst_time > q) {
-                for (int g = time; g < time + q; g++) {
+                int number_of_iteration=Ready_queue[0].burst_time/q;
+                for (int g = time; g < ceil(number_of_iteration); g++) {
                     chart.push_back(Ready_queue[0].pid);
-                    time += q;
                     Ready_queue[0].burst_time -= q;
+                    time+=q;
+                    Waiting_queue.push_back(Ready_queue[0]);
+                    break;
                 }
+                start = true;
             } else {
                 for (int g = time; g < time + Ready_queue[0].burst_time; g++) {
                     chart.push_back(Ready_queue[0].pid);
@@ -82,7 +89,54 @@ vector<int> RR(int timequantum, vector<Process> &Waiting_queue) {
                 }
             }
         }
+
+
+
+
+
     }
+
+//    while (finished_processes < n) {
+//        bool found = false;
+//        for (int i = 0; i < n; i++) {
+//            if (time >= Waiting_queue[i].arrival_time) {
+//                Ready_queue.push_back(Waiting_queue[i]);
+//                Waiting_queue.erase(Waiting_queue.begin() + i); // Remove process from waiting queue
+//                found = true;
+//                break; // Exit the loop after finding a process to add to the ready queue
+//            }
+//        }
+//
+//        if (!found) {
+//            time++;
+//            continue;
+//        }
+//
+//        if (Ready_queue[0].burst_time > 0) {
+//            if (Ready_queue[0].burst_time > q) {
+//                for (int g = 0; g < q; g++) {
+//                    chart.push_back(Ready_queue[0].pid);
+//                    Ready_queue[0].burst_time--;
+//                    time++; // Increment time for each unit of burst time processed
+//                }
+//            } else {
+//                int remaining_burst_time = Ready_queue[0].burst_time;
+//                for (int g = 0; g < remaining_burst_time; g++) {
+//                    chart.push_back(Ready_queue[0].pid);
+//                    Ready_queue[0].burst_time = 0;
+//                    Ready_queue[0].finish_time = time + 1;
+//                    time++; // Increment time for each unit of burst time processed
+//                    finished_processes++;
+//                    ready_processes--;
+//                    start = true;
+//                }
+//            }
+//        }
+//
+//        Ready_queue.erase(Ready_queue.begin()); // Remove the processed process from the ready queue
+//    }
+
+
     return chart;
 }
 
@@ -124,6 +178,7 @@ int main() {
 
     return 0;
 }
+
 
 
 
