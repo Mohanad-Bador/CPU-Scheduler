@@ -13,6 +13,7 @@ void Circular_Shift_Left(vector<process>&list) {
 }
 
 vector<int> RR(int timequantum, vector<process> &Waiting_queue) {
+    bool flag=false;
     vector<process> Ready_queue;
     int n = Waiting_queue.size();
     int time = 0;
@@ -31,7 +32,7 @@ vector<int> RR(int timequantum, vector<process> &Waiting_queue) {
                 num_removed++;
             }
         }
-        if(arrived_processes>1){
+        if(arrived_processes>1&&flag){
             Circular_Shift_Left(Ready_queue);
         }
 
@@ -44,6 +45,7 @@ vector<int> RR(int timequantum, vector<process> &Waiting_queue) {
         }
 
         if (Ready_queue[0].bt > 0) {
+            flag= true;
             if(Ready_queue[0].bt > q) {
                 chart.push_back(Ready_queue[0].id);
                     Ready_queue[0].bt -= q;
