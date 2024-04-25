@@ -38,23 +38,26 @@ vector<int> RR(int timequantum, vector<process>& Waiting_queue) {
 
     // Loop until all processes finish execution
     while (finished_processes < n) {
-        int num_removed = 0; // Number of elements removed from Waiting_queue
-        // Check for processes that have arrived and move them to the ready queue
-        for (int i = 0; i < Waiting_queue.size(); i++) {
-            if (time >= Waiting_queue[i].at) {
-                Ready_queue.push_back(Waiting_queue[i]);
+       // int num_removed = 0; // Number of elements removed from Waiting_queue
+       vector<int>num_removed={0};
+
+        for (auto it = Waiting_queue.begin(); it != Waiting_queue.end(); /*No increment here*/) {
+            if (time >= it->at) {
+                Ready_queue.push_back(*it);
                 arrived_processes++;
                 ready_processes++;
-                num_removed++;
+                it = Waiting_queue.erase(it); // Erase and update iterator
+            } else {
+                ++it; // Move to the next element
             }
         }
+
         // If more than one process has arrived and circular shift has been performed, shift again
         if (arrived_processes > 1 && flag) {
             Circular_Shift_Left(Ready_queue);
         }
 
-        // Remove elements from Waiting_queue
-        Waiting_queue.erase(Waiting_queue.begin(), Waiting_queue.begin() + num_removed);
+
 
         // If no process is ready for execution, increment time and continue
         if (ready_processes == 0) {
@@ -82,3 +85,125 @@ vector<int> RR(int timequantum, vector<process>& Waiting_queue) {
 
     return chart; // Return the Gantt chart
 }
+
+/*
+ * // Check if ch == 4
+        if (ch == 4) {
+            // Initialize variables
+            int i;
+            int m, nextval, nextarr;
+
+            // Create a copy of the original process data
+            for (i = 1; i <= num; i++) {  //num ????
+                p1[i] = p[i];
+            }
+
+            // Set initial values for nextval and nextarr  (Timer)
+            nextval = p[1].at;   // error  p[first process]
+
+            // Populate the queue with processes that have arrived before or at the current time
+            for (i = 1; i <= num, p[i].at <= nextval; i++) {
+                q1.push(p[i].id);
+            }
+            nextarr = p[1].at;
+
+            // Execute Round Robin scheduling algorithm
+            while (!q1.empty()) {
+                // Get the next process from the queue
+                m = q1.front();
+                q1.pop();
+//#######################################################################################################################
+                // Check if remaining burst time is greater than or equal to time slice
+                if (p[m].bt >= time_slice) {
+                    // Draw a rectangle representing execution of the process for a time slice
+                    QBrush color_brush(QColor(p[m].color));
+                    QPen blackpen(Qt::black);
+                    blackpen.setWidth(1);
+                    rectangle = scene->addRect(-200 + Rectangle_Width * nextval,
+                                               0,
+                                               Rectangle_Width * time_slice,
+                                               Rectangle_Height,
+                                               blackpen,
+                                               color_brush);
+                    // Display the current time value on top of the rectangle
+                    QString temp_str = QString::number(nextval);
+                    QGraphicsTextItem *txtitem = new QGraphicsTextItem(temp_str);
+                    txtitem->setPos(QPointF(-200 + Rectangle_Width * nextval, 100));
+                    scene->addItem(txtitem);
+
+                    // Update nextval
+                    nextval += time_slice;
+                } else {
+                    // Draw a rectangle representing execution of the remaining burst time of the process
+                    QBrush color_brush(QColor(p[m].color));
+                    QPen blackpen(Qt::black);
+                    blackpen.setWidth(1);
+                    rectangle = scene->addRect(-200 + Rectangle_Width * nextval,
+                                               0,
+                                               Rectangle_Width * p[m].bt,
+                                               Rectangle_Height,
+                                               blackpen,
+                                               color_brush);
+                    // Display the current time value on top of the rectangle
+                    QString temp_str = QString::number(nextval);
+                    QGraphicsTextItem *txtitem = new QGraphicsTextItem(temp_str);
+                    txtitem->setPos(QPointF(-200 + Rectangle_Width * nextval, 100));
+                    scene->addItem(txtitem);
+
+                    // Update nextval
+                    nextval += p[m].bt;
+                }
+
+                // Update remaining burst time of the process
+                p[m].bt -= time_slice;
+
+                // Check if there are more processes to arrive before the next time slice
+                if (nextval < nextarr) {
+                    // Add the process back to the queue if it still has remaining burst time
+                    if (p[m].bt > 0) {
+                        q1.push(m);
+                    }
+                    // Update finish time of the process if it has completed execution
+                    if (p1[m].bt <= 0) {
+                        p[m].ft = nextval;
+                    }
+                } else {
+                    // Add processes arriving before the next time slice to the queue
+                    while (i <= num && p1[i].at <= nextval) {
+                        q1.push(p[i].id);
+                        i++;
+                    }
+                    // Update nextarr to the arrival time of the next process
+                    if (i <= num) {
+                        nextarr = p[i].at;
+                    }
+                    // Add the current process back to the queue if it still has remaining burst time
+                    if (p[m].bt > 0) {
+                        q1.push(m);
+                    }
+                    // Update finish time of the process if it has completed execution
+                    if (p[m].bt <= 0) {
+                        p[m].ft = nextval;
+                    }
+                }
+
+                // Wait for approximately 2.5 seconds for visualization
+                QElapsedTimer t;
+                t.start();
+                while (t.elapsed() < 2500) {
+                    QCoreApplication::processEvents();
+                }
+            }
+
+            // Display the final time value
+            QString temp_str = QString::number(nextval);
+            QGraphicsTextItem *txtitem = new QGraphicsTextItem(temp_str);
+            txtitem->setPos(QPointF(-200 + Rectangle_Width * nextval, 100));
+            scene->addItem(txtitem);
+
+            // Update condition variable and perform additional operations
+            condition = 0;
+            displayturnwait(num);
+            QMessageBox::information(this, "Succeed", "Simulation Completed!");
+        }
+ */
