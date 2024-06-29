@@ -10,3 +10,4 @@
 5. Click Input
 6. Enter the processes data
 7. Click Load then Simulate
+[OS_Project.pdf](https://github.com/user-attachments/files/16039794/OS_Project.pdf)
